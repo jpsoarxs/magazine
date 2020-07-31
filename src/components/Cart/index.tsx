@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { MdClose } from 'react-icons/md';
 import {
   Container,
   MainContainer,
@@ -7,9 +8,8 @@ import {
   IconButton,
   ItemTitle,
   ItemPrice,
-  ItemGroup
+  ItemGroup,
 } from './styles';
-import { MdClose } from 'react-icons/md';
 
 interface CartProps {
   handleRemoveCart(): void;
@@ -17,43 +17,45 @@ interface CartProps {
 }
 
 const Cart: React.FC<CartProps> = ({ handleRemoveCart, isCartActive }) => {
-
   interface cartItemIter {
-    id: number,
-    name: String,
-    price: number,
-    qtd: number
+    id: number;
+    name: string;
+    price: number;
+    qtd: number;
   }
 
   const [cartItem, setCartItem] = useState<cartItemIter[]>([]);
   const [cartQtd, setCartQtd] = useState<number>(0);
   const [cartValue, setCartValue] = useState<number>(0);
 
-  const addItemCart = (id:number, name:String, price:number) => {
-    let index = cartItem.findIndex(val => val.id == id);
-    if(index < 0) {
-      setCartItem([...cartItem,{id, name, price, qtd: 1}])
-      setCartQtd(cartQtd + 1)
-      setCartValue(cartValue + price)
+  const addItemCart = (id: number, name: string, price: number) => {
+    const index = cartItem.findIndex(val => val.id == id);
+    if (index < 0) {
+      setCartItem([...cartItem, { id, name, price, qtd: 1 }]);
+      setCartQtd(cartQtd + 1);
+      setCartValue(cartValue + price);
     } else {
-      let qtd = cartItem[index].qtd += 1
-      cartItem.splice(index)
-      setCartItem([...cartItem,{id, name, price, qtd}])
-      setCartValue(cartValue + price)
+      const qtd = (cartItem[index].qtd += 1);
+      cartItem.splice(index);
+      setCartItem([...cartItem, { id, name, price, qtd }]);
+      setCartValue(cartValue + price);
     }
-  }
+  };
 
-  const removeItemCart = (id:number) => {
-    let index = cartItem.findIndex(val => val.id == id);
-    setCartQtd(cartQtd - 1)
-    setCartValue(cartValue - cartItem[index].price * cartItem[index].qtd)
-    cartItem.splice(index)
+  const removeItemCart = (id: number) => {
+    const index = cartItem.findIndex(val => val.id == id);
+    setCartQtd(cartQtd - 1);
+    setCartValue(cartValue - cartItem[index].price * cartItem[index].qtd);
+    cartItem.splice(index);
     setCartItem([...cartItem]);
-  }
+  };
 
-  const currency = (value:number) => {
-    return new Intl.NumberFormat('br-BR', { style: 'currency', currency: 'BRL' }).format(value)
-  }
+  const currency = (value: number) => {
+    return new Intl.NumberFormat('br-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(value);
+  };
 
   return (
     <Container isCartActive={isCartActive}>
@@ -65,9 +67,14 @@ const Cart: React.FC<CartProps> = ({ handleRemoveCart, isCartActive }) => {
       </header>
 
       <MainContainer>
-        {cartItem.map(item =>
+        {cartItem.map(item => (
           <CartItem>
-            <IconButton type="button" onClick={() => {removeItemCart(item.id)}}>
+            <IconButton
+              type="button"
+              onClick={() => {
+                removeItemCart(item.id);
+              }}
+            >
               <MdClose size={15} />
             </IconButton>
             <ItemTitle>{item.name}</ItemTitle>
@@ -76,13 +83,21 @@ const Cart: React.FC<CartProps> = ({ handleRemoveCart, isCartActive }) => {
               {item.qtd}
             </ItemGroup>
           </CartItem>
-        )}
+        ))}
       </MainContainer>
 
       <FooterContainer>
-        <p>{cartQtd} item. Preço total: {currency(cartValue)}</p>
+        <p>
+          {cartQtd} item. Preço total:
+          {currency(cartValue)}
+        </p>
 
-        <button type="button" onClick={() => {addItemCart(1,"teste",45.50)}}>
+        <button
+          type="button"
+          onClick={() => {
+            addItemCart(1, 'teste', 45.5);
+          }}
+        >
           Enviar pedido pelo Whatsapp
         </button>
         <button type="button">Pagar com Mercado Pago</button>

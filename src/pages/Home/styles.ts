@@ -1,4 +1,5 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
+import HTMLFlipBook from 'react-pageflip';
 
 interface ContainerProps {
   isCartActive?: boolean;
@@ -9,7 +10,6 @@ export const Container = styled.div<ContainerProps>`
 
   height: 100vh;
 
-  position: relative;
   transition: width 0.2s ease-in-out;
   overflow: hidden;
 
@@ -20,29 +20,23 @@ export const Container = styled.div<ContainerProps>`
 
 export const MainContainer = styled.div`
   width: 100%;
-  max-width: 1250px;
+  max-width: 940px;
+  @media screen and (max-width: 943px) {
+    max-width: 490px;
+  }
   margin: 0 auto;
   height: calc(100% - 50px);
   display: flex;
   justify-content: center;
-  padding: 22px;
+  padding: 22px 0;
+
+  position: relative;
 `;
 
 export const DescriptionContainer = styled.div`
-  width: 100%;
-  background-color: #FFF;
-  max-width: 50%;
-  height: 100%;
+  background-color: #fff;
   max-height: 650px;
   padding: 20px;
-  @media screen and (max-width: 767px) {
-    max-width: 75%;
-    width: 96% !important;
-    margin-left: 56px;
-    border-radius: 10px;
-  }
-  border-bottom-left-radius: 10px;
-  border-top-left-radius: 10px;
 `;
 
 export const ImageContainer = styled.div`
@@ -54,11 +48,17 @@ export const ImageContainer = styled.div`
   }
 `;
 
+export const MagazineContainer = styled(HTMLFlipBook)`
+  p {
+    background-color: #fff;
+  }
+`;
+
 export const DescriptionTitle = styled.h1`
   font-size: 14px;
   font-weight: 500;
   text-transform: uppercase;
-  color: rgb(246,98,48);
+  color: rgb(246, 98, 48);
   padding: 22px 0;
 `;
 
@@ -100,38 +100,54 @@ export const ActionText = styled.p`
   }
 `;
 
+export const ArrowContainer = styled.div`
+  height: 100%;
+  display: flex;
+  align-items: center;
+`;
+
 export const ArrowRight = styled.div`
   background-color: #000;
-  height: calc(100% - 10px);
   width: 20px;
   opacity: 0.6;
-  color: #FFF;
+  color: #fff;
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
   display: flex;
   align-items: center;
   cursor: pointer;
-  margin-top: 5px;
 
   &:hover {
     opacity: 0.8;
   }
+
+  height: 100%;
+  max-height: 650px;
+
+  z-index: 999;
+  position: absolute;
+  right: 0;
 `;
 
 export const ArrowLeft = styled.div`
   background-color: #000;
-  height: calc(100% - 10px);
   width: 20px;
   opacity: 0.6;
-  color: #FFF;
+  color: #fff;
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
   display: flex;
   align-items: center;
   cursor: pointer;
-  margin-top: 5px;
 
   &:hover {
     opacity: 0.8;
   }
+
+  height: 100%;
+  max-height: 650px;
+
+  z-index: 999;
+  position: absolute;
+  left: 0;
 `;

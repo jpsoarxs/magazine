@@ -2,8 +2,8 @@ import styled from 'styled-components';
 
 export const Container = styled.header`
   width: 100%;
-  background-color: rgb(233,233,233);
-  border-bottom: 7px solid rgb(76,76,76);
+  background-color: rgb(233, 233, 233);
+  border-bottom: 7px solid rgb(76, 76, 76);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -22,20 +22,22 @@ export const IconButton = styled.button`
   padding: 12px;
 
   svg {
-    color: rgb(246,98,48);
+    color: rgb(246, 98, 48);
   }
 
   &:hover {
-    background: rgb(246,98,48);
+    background: rgb(246, 98, 48);
 
     svg {
-      color: #FFF;
+      color: #fff;
     }
   }
 `;
 
 export const CenterHeaderWrapper = styled.div`
   display: flex;
+  align-items: center;
+  height: 50px;
 `;
 
 export const PageSelectionInput = styled.div`
@@ -51,7 +53,7 @@ export const PageSelectionInput = styled.div`
     text-align: center;
     transition: all 0.3s ease;
     font-size: 15px;
-    color: rgb(246,98,48);
+    color: rgb(246, 98, 48);
     @media screen and (min-width: 767px) {
       margin-right: 50px;
     }
