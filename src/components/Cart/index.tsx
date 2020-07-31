@@ -8,7 +8,7 @@ import {
   IconButton,
   ItemTitle,
   ItemPrice,
-  ItemGroup
+  ItemGroup,
 } from './styles';
 
 interface CartProps {
@@ -28,14 +28,14 @@ const Cart: React.FC<CartProps> = ({ handleRemoveCart, isCartActive }) => {
   const [cartQtd, setCartQtd] = useState<number>(0);
   const [cartValue, setCartValue] = useState<number>(0);
 
-  const addItemCart = (id: number, name: String, price: number) => {
+  const addItemCart = (id: number, name: string, price: number) => {
     const index = cartItem.findIndex(val => val.id == id);
     if (index < 0) {
       setCartItem([...cartItem, { id, name, price, qtd: 1 }]);
       setCartQtd(cartQtd + 1);
       setCartValue(cartValue + price);
     } else {
-      const qtd = cartItem[index].qtd += 1
+      const qtd = (cartItem[index].qtd += 1);
       cartItem.splice(index);
       setCartItem([...cartItem, { id, name, price, qtd }]);
       setCartValue(cartValue + price);
@@ -69,7 +69,12 @@ const Cart: React.FC<CartProps> = ({ handleRemoveCart, isCartActive }) => {
       <MainContainer>
         {cartItem.map(item => (
           <CartItem>
-            <IconButton type="button" onClick={() => {removeItemCart(item.id)}}>
+            <IconButton
+              type="button"
+              onClick={() => {
+                removeItemCart(item.id);
+              }}
+            >
               <MdClose size={15} />
             </IconButton>
             <ItemTitle>{item.name}</ItemTitle>
@@ -78,18 +83,14 @@ const Cart: React.FC<CartProps> = ({ handleRemoveCart, isCartActive }) => {
               {item.qtd}
             </ItemGroup>
           </CartItem>
-        )
         ))}
       </MainContainer>
 
       <FooterContainer>
         <p>
-{cartQtd}
-{' '}
-item. Preço total:
-{' '}
-{currency(cartValue)}
-</p>
+          {cartQtd} item. Preço total:
+          {currency(cartValue)}
+        </p>
 
         <button
           type="button"

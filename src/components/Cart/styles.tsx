@@ -6,6 +6,7 @@ interface ContainerProps {
 
 export const Container = styled.div<ContainerProps>`
   position: absolute;
+  z-index: 9999;
   top: 0;
   display: ${props => (props.isCartActive ? 'block' : 'none')};
   right: ${props => (props.isCartActive ? '0px' : '-360px')};
@@ -64,13 +65,12 @@ export const FooterContainer = styled.div`
     margin-bottom: 12px;
   }
 
-
   button {
     width: 100%;
     border: 0;
     margin-bottom: 12px;
     color: #fff;
-    background-color: rgb(246,98,48);
+    background-color: rgb(246, 98, 48);
 
     &:first-of-type {
       padding: 22px;
@@ -88,9 +88,9 @@ export const CartItem = styled.li`
   padding-left: 0;
   width: 100%;
   height: 100px;
-  -webkit-transition: all .1s ease-in-out;
-  -o-transition: all .1s ease-in-out;
-  transition: all .1s ease-in-out;
+  -webkit-transition: all 0.1s ease-in-out;
+  -o-transition: all 0.1s ease-in-out;
+  transition: all 0.1s ease-in-out;
 `;
 
 export const IconButton = styled.button`
@@ -100,14 +100,14 @@ export const IconButton = styled.button`
   padding: 12px;
 
   svg {
-    color: rgb(246,98,48);
+    color: rgb(246, 98, 48);
   }
 
   &:hover {
-    background: rgb(246,98,48);
+    background: rgb(246, 98, 48);
 
     svg {
-      color: #FFF;
+      color: #fff;
     }
   }
 `;
@@ -129,5 +129,5 @@ export const ItemGroup = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: 15px;
-  text-align:center;
+  text-align: center;
 `;
