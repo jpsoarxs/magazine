@@ -6,7 +6,7 @@ interface ContainerProps {
 }
 
 interface ImageContainerProps {
-  imageHeight: number;
+  imageHeight: number | null;
 }
 
 interface ArrowProps {
@@ -161,14 +161,16 @@ export const ImageContainer = styled.div<ImageContainerProps>`
     max-height: ${props => `${props.imageHeight}px`};
     height: 100%;
     position: relative;
+    z-index: 999999;
   }
 
   button {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     position: absolute;
-    left: 0;
-    background: blue;
     z-index: 999999;
+    background: transparent;
+    color: transparent;
+    border: 0;
   }
 `;

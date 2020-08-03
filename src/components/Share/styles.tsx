@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 interface ContainerProps {
   isModalActive?: boolean;
@@ -14,13 +14,13 @@ export const Modal = styled.div<ContainerProps>`
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgb(0,0,0);
-  background-color: rgba(0,0,0,0.4);
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
 `;
 
 export const ModalBody = styled.div<ContainerProps>`
   margin: auto;
-  background-color: rgb(233,233,233);
+  background-color: rgb(233, 233, 233);
   position: relative;
   padding: 35px;
   outline: 0;
@@ -37,7 +37,7 @@ export const ModalBody = styled.div<ContainerProps>`
   }
 
   a:hover {
-    color: rgb(246,98,48);
+    color: rgb(246, 98, 48);
   }
 `;
 
@@ -50,16 +50,15 @@ export const Close = styled.span`
 `;
 
 export const ButtonFace = styled.a`
-  border:none;
+  border: none;
   color: #3b5998;
-  background-color: rgb(233,233,233);
+  background-color: rgb(233, 233, 233);
   cursor: pointer;
 `;
 
-
 export const ButtonWhat = styled.a`
-  border:none;
-  color: #25D366;
-  background-color: rgb(233,233,233);
+  border: none;
+  color: #25d366;
+  background-color: rgb(233, 233, 233);
   cursor: pointer;
 `;

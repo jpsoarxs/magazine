@@ -1,13 +1,12 @@
-import React, { useState, useRef, useEffect } from 'react';
-
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { FaArrowRight, FaArrowLeft } from 'react-icons/fa';
 import Header from '../../components/Header';
 import Cart from '../../components/Cart';
 import Share from '../../components/Share';
 
-import capa from '../../assets/CAPA_REVISTA.jpg';
-import page1 from '../../assets/Pagina_01.jpg';
-import page2 from '../../assets/Pagina_02.jpg';
+import { useCart } from '../../hooks/CartContext';
+
+import { magazineJSON } from '../../helpers';
 
 import {
   Container,
@@ -33,6 +32,7 @@ interface ResponsiveProps {
 const Home: React.FC = () => {
   const [isCartActive, setIsCartActive] = useState(false);
   const [isShareActive, setIsShareActive] = useState(false);
+  const { addToCart } = useCart();
   const [responsiveMagazine, setResponsiveMagazine] = useState<ResponsiveProps>(
     {
       width: null,
@@ -114,6 +114,17 @@ const Home: React.FC = () => {
     });
   }, []);
 
+  const handleAddToCart = useCallback(
+    item => {
+      addToCart({ ...item });
+
+      if (!isCartActive) {
+        setIsCartActive(true);
+      }
+    },
+    [addToCart, isCartActive],
+  );
+
   return (
     <>
       <Container isCartActive={isCartActive}>
@@ -139,6 +150,34 @@ const Home: React.FC = () => {
                 </ArrowLeft>
               </ArrowContainer>
             )}
+
+            {magazineJSON.map(magazine => {
+              if (magazine.pageNumber === page.page) {
+                return (
+                  <ImageContainer
+                    key={magazine.pageNumber}
+                    imageHeight={responsiveMagazine.height}
+                  >
+                    <div>
+                      {magazine.buttons.map(button => (
+                        <button
+                          key={button.name}
+                          type="button"
+                          style={{
+                            bottom: button.bottom,
+                            right: button.right,
+                            top: button.top,
+                          }}
+                          onClick={() => handleAddToCart(button.item)}
+                        >
+                          {button.name}
+                        </button>
+                      ))}
+                    </div>
+                  </ImageContainer>
+                );
+              }
+            })}
 
             <MagazineContainer
               onFlip={e => pageClick(e.data)}
@@ -171,14 +210,17 @@ const Home: React.FC = () => {
                 <BottomText>Boa leitura e boas compras!</BottomText>
               </DescriptionContainer>
 
-              <img src={capa} />
-
-              <ImageContainer imageHeight={responsiveMagazine.height}>
-                <img src={page1} />
-                <button>BLa</button>
-              </ImageContainer>
-
-              <img src={page2} />
+              {magazineJSON.map(magazine => (
+                <ImageContainer
+                  key={magazine.pageNumber}
+                  imageHeight={responsiveMagazine.height}
+                >
+                  <img
+                    src={magazine.image}
+                    alt={`Revista - Pagina ${magazine.pageNumber}`}
+                  />
+                </ImageContainer>
+              ))}
             </MagazineContainer>
 
             {page.page < page.totalPages && (
@@ -196,6 +238,7 @@ const Home: React.FC = () => {
           <div>carregando...</div>
         )}
       </Container>
+
       <Cart
         isCartActive={isCartActive}
         handleRemoveCart={() => setIsCartActive(false)}
