@@ -5,6 +5,18 @@ interface ContainerProps {
   isCartActive?: boolean;
 }
 
+interface ImageContainerProps {
+  imageHeight: number;
+}
+
+interface ArrowProps {
+  arrowHeight: number;
+}
+
+interface MainContainerProps {
+  mainWidth: number;
+}
+
 export const Container = styled.div<ContainerProps>`
   width: ${props => (props.isCartActive ? 'calc(100% - 360px)' : '100%')};
 
@@ -18,13 +30,17 @@ export const Container = styled.div<ContainerProps>`
   }
 `;
 
-export const MainContainer = styled.div`
+export const MainContainer = styled.div<MainContainerProps>`
   width: 100%;
-  max-width: 940px;
-  @media screen and (max-width: 943px) {
-    max-width: 490px;
-  }
   margin: 0 auto;
+
+  @media screen and (min-width: 1000px) {
+    max-width: 940px;
+  }
+
+  @media screen and (max-width: 960px) {
+    max-width: ${props => `${props.mainWidth}px`};
+  }
   height: calc(100% - 50px);
   display: flex;
   justify-content: center;
@@ -37,15 +53,6 @@ export const DescriptionContainer = styled.div`
   background-color: #fff;
   max-height: 650px;
   padding: 20px;
-`;
-
-export const ImageContainer = styled.div`
-  text-align: center;
-  img {
-    height: 100%;
-    max-height: 650px;
-    transition: 0.6s ease;
-  }
 `;
 
 export const MagazineContainer = styled(HTMLFlipBook)`
@@ -106,7 +113,7 @@ export const ArrowContainer = styled.div`
   align-items: center;
 `;
 
-export const ArrowRight = styled.div`
+export const ArrowRight = styled.div<ArrowProps>`
   background-color: #000;
   width: 20px;
   opacity: 0.6;
@@ -122,14 +129,12 @@ export const ArrowRight = styled.div`
   }
 
   height: 100%;
-  max-height: 650px;
+  max-height: ${props => `${props.arrowHeight}px`};
 
   z-index: 999;
-  position: absolute;
-  right: 0;
 `;
 
-export const ArrowLeft = styled.div`
+export const ArrowLeft = styled.div<ArrowProps>`
   background-color: #000;
   width: 20px;
   opacity: 0.6;
@@ -145,9 +150,25 @@ export const ArrowLeft = styled.div`
   }
 
   height: 100%;
-  max-height: 650px;
+  max-height: ${props => `${props.arrowHeight}px`};
 
   z-index: 999;
-  position: absolute;
-  left: 0;
+`;
+
+export const ImageContainer = styled.div<ImageContainerProps>`
+  img {
+    width: 100%;
+    max-height: ${props => `${props.imageHeight}px`};
+    height: 100%;
+    position: relative;
+  }
+
+  button {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    left: 0;
+    background: blue;
+    z-index: 999999;
+  }
 `;

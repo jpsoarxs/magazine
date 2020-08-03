@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 import { FaArrowRight, FaArrowLeft } from 'react-icons/fa';
 import Header from '../../components/Header';
@@ -22,11 +22,23 @@ import {
   ArrowLeft,
   ArrowContainer,
   MagazineContainer,
+  ImageContainer,
 } from './styles';
+
+interface ResponsiveProps {
+  width: number | null;
+  height: number | null;
+}
 
 const Home: React.FC = () => {
   const [isCartActive, setIsCartActive] = useState(false);
   const [isShareActive, setIsShareActive] = useState(false);
+  const [responsiveMagazine, setResponsiveMagazine] = useState<ResponsiveProps>(
+    {
+      width: null,
+      height: null,
+    },
+  );
   const magazineRef = useRef(null);
 
   const [page, setPage] = useState({ page: 1, totalPages: 3 });
@@ -69,6 +81,39 @@ const Home: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+
+    let magazineWidth = 0;
+    let magazineHeight = 0;
+
+    if (windowWidth <= 520) {
+      magazineWidth = 300;
+    } else if (windowWidth <= 720 && windowWidth >= 521) {
+      magazineWidth = 350;
+    } else if (windowWidth >= 920) {
+      magazineWidth = 450;
+    } else {
+      magazineWidth = 450;
+    }
+
+    if (windowHeight <= 620) {
+      magazineHeight = 450;
+    } else if (windowHeight <= 820 && windowHeight >= 621) {
+      magazineHeight = 500;
+    } else if (windowHeight >= 900) {
+      magazineHeight = 650;
+    } else {
+      magazineWidth = 650;
+    }
+
+    setResponsiveMagazine({
+      width: magazineWidth,
+      height: magazineHeight,
+    });
+  }, []);
+
   return (
     <>
       <Container isCartActive={isCartActive}>
@@ -82,59 +127,74 @@ const Home: React.FC = () => {
           handleRemoveModal={() => setIsShareActive(false)}
         />
 
-        <MainContainer>
-          {page.page > 1 && (
-            <ArrowContainer>
-              <ArrowLeft onClick={() => backPage(magazineRef)}>
-                <FaArrowLeft size="15" />
-              </ArrowLeft>
-            </ArrowContainer>
-          )}
+        {responsiveMagazine.width && responsiveMagazine.height ? (
+          <MainContainer mainWidth={responsiveMagazine.width}>
+            {page.page > 1 && (
+              <ArrowContainer>
+                <ArrowLeft
+                  arrowHeight={responsiveMagazine.height}
+                  onClick={() => backPage(magazineRef)}
+                >
+                  <FaArrowLeft size="15" />
+                </ArrowLeft>
+              </ArrowContainer>
+            )}
 
-          <MagazineContainer
-            onFlip={e => pageClick(e.data)}
-            ref={magazineRef}
-            width={450}
-            height={650}
-            responsive
-          >
-            <DescriptionContainer>
-              <DescriptionSubTitle>
-                Ficou ainda mais fácil
-                <strong>comprar on-line pelo Whatsapp.</strong>
-              </DescriptionSubTitle>
+            <MagazineContainer
+              onFlip={e => pageClick(e.data)}
+              ref={magazineRef}
+              width={responsiveMagazine.width}
+              height={responsiveMagazine.height}
+              responsive
+            >
+              <DescriptionContainer>
+                <DescriptionSubTitle>
+                  Ficou ainda mais fácil
+                  <strong>comprar on-line pelo Whatsapp.</strong>
+                </DescriptionSubTitle>
 
-              <QuestionText>Como funciona?</QuestionText>
+                <QuestionText>Como funciona?</QuestionText>
 
-              <ListDescriptions>
-                <ListDescriptionItem>
-                  Navegue pelas páginas do catálogo digital e selecione os
-                  produtos que deseja comprar clicando no ícone do carrinho de
-                  compras.
-                </ListDescriptionItem>
-                <ListDescriptionItem>
-                  Assim que terminar de escolher seus produtos envie a lista
-                  para um(a) Consultor(a) Style Brand e aguarde o retorno para
-                  combinar direitinho a forma de pagamento e entrega segura.
-                </ListDescriptionItem>
-              </ListDescriptions>
+                <ListDescriptions>
+                  <ListDescriptionItem>
+                    Navegue pelas páginas do catálogo digital e selecione os
+                    produtos que deseja comprar clicando no ícone do carrinho de
+                    compras.
+                  </ListDescriptionItem>
+                  <ListDescriptionItem>
+                    Assim que terminar de escolher seus produtos envie a lista
+                    para um(a) Consultor(a) Style Brand e aguarde o retorno para
+                    combinar direitinho a forma de pagamento e entrega segura.
+                  </ListDescriptionItem>
+                </ListDescriptions>
 
-              <BottomText>Boa leitura e boas compras!</BottomText>
-            </DescriptionContainer>
+                <BottomText>Boa leitura e boas compras!</BottomText>
+              </DescriptionContainer>
 
-            <img src={capa} />
-            <img src={page1} />
-            <img src={page2} />
-          </MagazineContainer>
+              <img src={capa} />
 
-          {page.page < page.totalPages && (
-            <ArrowContainer>
-              <ArrowRight onClick={() => nextPage(magazineRef)}>
-                <FaArrowRight size="15" />
-              </ArrowRight>
-            </ArrowContainer>
-          )}
-        </MainContainer>
+              <ImageContainer imageHeight={responsiveMagazine.height}>
+                <img src={page1} />
+                <button>BLa</button>
+              </ImageContainer>
+
+              <img src={page2} />
+            </MagazineContainer>
+
+            {page.page < page.totalPages && (
+              <ArrowContainer>
+                <ArrowRight
+                  arrowHeight={responsiveMagazine.height}
+                  onClick={() => nextPage(magazineRef)}
+                >
+                  <FaArrowRight size="15" />
+                </ArrowRight>
+              </ArrowContainer>
+            )}
+          </MainContainer>
+        ) : (
+          <div>carregando...</div>
+        )}
       </Container>
       <Cart
         isCartActive={isCartActive}
