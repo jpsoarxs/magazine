@@ -57,7 +57,11 @@ const Home: React.FC = () => {
         totalPages,
       });
     }
-  }, []);
+
+    if (isCartActive) {
+      setIsCartActive(false);
+    }
+  }, [isCartActive]);
 
   const handleGoToPreviousPage = useCallback(() => {
     const magazineRefPageFlip = magazineRef?.current?.getPageFlip();
@@ -72,7 +76,11 @@ const Home: React.FC = () => {
 
       magazineRefPageFlip.turnToPrevPage();
     }
-  }, []);
+
+    if (isCartActive) {
+      setIsCartActive(false);
+    }
+  }, [isCartActive]);
 
   const handlePageFlipped = useCallback(pageNumber => {
     setPage(({ page: actualPage, totalPages }) => ({
