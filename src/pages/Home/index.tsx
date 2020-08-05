@@ -3,7 +3,6 @@ import { FaArrowRight, FaArrowLeft } from 'react-icons/fa';
 import Header from '../../components/Header';
 import Cart from '../../components/Cart';
 import Share from '../../components/Share';
-
 import { useCart } from '../../hooks/CartContext';
 
 import { magazineJSON } from '../../helpers';
@@ -32,54 +31,55 @@ interface ResponsiveProps {
 const Home: React.FC = () => {
   const [isCartActive, setIsCartActive] = useState(false);
   const [isShareActive, setIsShareActive] = useState(false);
+  const [page, setPage] = useState({ page: 1, totalPages: 3 });
   const { addToCart } = useCart();
+  const magazineRef = useRef<any>(null);
   const [responsiveMagazine, setResponsiveMagazine] = useState<ResponsiveProps>(
     {
       width: null,
       height: null,
     },
   );
-  const magazineRef = useRef(null);
 
-  const [page, setPage] = useState({ page: 1, totalPages: 3 });
+  const handleGoToNextPage = useCallback(() => {
+    const magazineRefPageFlip = magazineRef?.current?.getPageFlip();
+    const currentPage = magazineRefPageFlip.getCurrentPageIndex();
+    const totalPages = magazineRefPageFlip.getPageCount() - 1;
+    const windowWidth = window.innerWidth;
+    const onePerPage = windowWidth <= 960;
+    const toPage = onePerPage ? currentPage + 1 : currentPage + 3;
 
-  const nextPage = page => {
-    if (page.current.getPageFlip().getCurrentPageIndex() / 2 == 0) {
-      page.current.getPageFlip().turnToNextPage();
+    magazineRefPageFlip.turnToPage(toPage);
+
+    if (currentPage < totalPages) {
       setPage({
-        page: page.current.getPageFlip().getCurrentPageIndex() + 1,
-        totalPages: page.current.getPageFlip().getPageCount() - 1,
-      });
-    } else {
-      page.current.getPageFlip().turnToNextPage();
-      setPage({
-        page: page.current.getPageFlip().getCurrentPageIndex() + 1,
-        totalPages: page.current.getPageFlip().getPageCount() - 1,
+        page: toPage,
+        totalPages,
       });
     }
-  };
+  }, []);
 
-  const backPage = page => {
-    page.current.getPageFlip().turnToPrevPage();
-    setPage({
-      page: page.current.getPageFlip().getCurrentPageIndex() + 1,
-      totalPages: page.current.getPageFlip().getPageCount() - 1,
-    });
-  };
+  const handleGoToPreviousPage = useCallback(() => {
+    const magazineRefPageFlip = magazineRef?.current?.getPageFlip();
+    const currentPage = magazineRefPageFlip.getCurrentPageIndex() + 1;
+    const totalPages = magazineRefPageFlip.getPageCount() - 1;
 
-  const pageClick = data => {
-    if (page.totalPages / 2 == 0) {
-      if (data >= page.page) {
-        setPage({ page: page.page + 1, totalPages: page.totalPages });
-      } else {
-        setPage({ page: page.page - 1, totalPages: page.totalPages });
-      }
-    } else if (data >= page.page) {
-      setPage({ page: page.page + 2, totalPages: page.totalPages });
-    } else {
-      setPage({ page: page.page - 2, totalPages: page.totalPages });
+    if (currentPage > 0) {
+      setPage({
+        page: currentPage === 1 ? currentPage : currentPage - 1,
+        totalPages,
+      });
+
+      magazineRefPageFlip.turnToPrevPage();
     }
-  };
+  }, []);
+
+  const handlePageFlipped = useCallback(pageNumber => {
+    setPage(({ page: actualPage, totalPages }) => ({
+      page: pageNumber > totalPages ? actualPage : pageNumber,
+      totalPages,
+    }));
+  }, []);
 
   useEffect(() => {
     const windowWidth = window.innerWidth;
@@ -116,7 +116,7 @@ const Home: React.FC = () => {
 
   const handleAddToCart = useCallback(
     item => {
-      addToCart({ ...item });
+      addToCart(item);
 
       if (!isCartActive) {
         setIsCartActive(true);
@@ -144,7 +144,7 @@ const Home: React.FC = () => {
               <ArrowContainer>
                 <ArrowLeft
                   arrowHeight={responsiveMagazine.height}
-                  onClick={() => backPage(magazineRef)}
+                  onClick={handleGoToPreviousPage}
                 >
                   <FaArrowLeft size="15" />
                 </ArrowLeft>
@@ -166,6 +166,7 @@ const Home: React.FC = () => {
                           style={{
                             bottom: button.bottom,
                             right: button.right,
+                            left: button.left,
                             top: button.top,
                           }}
                           onClick={() => handleAddToCart(button.item)}
@@ -180,7 +181,7 @@ const Home: React.FC = () => {
             })}
 
             <MagazineContainer
-              onFlip={e => pageClick(e.data)}
+              onFlip={e => handlePageFlipped(e.data)}
               ref={magazineRef}
               width={responsiveMagazine.width}
               height={responsiveMagazine.height}
@@ -227,7 +228,7 @@ const Home: React.FC = () => {
               <ArrowContainer>
                 <ArrowRight
                   arrowHeight={responsiveMagazine.height}
-                  onClick={() => nextPage(magazineRef)}
+                  onClick={handleGoToNextPage}
                 >
                   <FaArrowRight size="15" />
                 </ArrowRight>

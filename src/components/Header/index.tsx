@@ -51,7 +51,9 @@ const Header: React.FC<HeaderProps> = ({
 
         <PageSelectionInput>
           <p>
-            {page.page} /{page.totalPages}
+            <span>{page.page === 0 ? 1 : page.page}</span>
+            <span> / </span>
+            <span>{page.totalPages}</span>
           </p>
         </PageSelectionInput>
 

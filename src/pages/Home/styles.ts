@@ -171,6 +171,6 @@ export const ImageContainer = styled.div<ImageContainerProps>`
     z-index: 999999;
     background: transparent;
     color: transparent;
-    border: 0;
+    /* border: 0; */
   }
 `;
