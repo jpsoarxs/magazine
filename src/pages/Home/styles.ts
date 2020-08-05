@@ -15,6 +15,7 @@ interface ArrowProps {
 
 interface MainContainerProps {
   mainWidth: number;
+  mainHeight: number;
 }
 
 export const Container = styled.div<ContainerProps>`
@@ -32,7 +33,7 @@ export const Container = styled.div<ContainerProps>`
 
 export const MainContainer = styled.div<MainContainerProps>`
   width: 100%;
-  margin: 0 auto;
+  margin: 50px auto 0 auto;
 
   @media screen and (min-width: 1000px) {
     max-width: 940px;
@@ -41,11 +42,11 @@ export const MainContainer = styled.div<MainContainerProps>`
   @media screen and (max-width: 960px) {
     max-width: ${props => `${props.mainWidth}px`};
   }
-  height: calc(100% - 50px);
+
+  height: ${props => `${props.mainHeight}px`};
+
   display: flex;
   justify-content: center;
-  padding: 22px 0;
-
   position: relative;
 `;
 

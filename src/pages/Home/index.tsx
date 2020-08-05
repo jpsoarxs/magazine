@@ -139,7 +139,10 @@ const Home: React.FC = () => {
         />
 
         {responsiveMagazine.width && responsiveMagazine.height ? (
-          <MainContainer mainWidth={responsiveMagazine.width}>
+          <MainContainer
+            mainWidth={responsiveMagazine.width}
+            mainHeight={responsiveMagazine.height}
+          >
             {page.page > 1 && (
               <ArrowContainer>
                 <ArrowLeft
@@ -151,34 +154,69 @@ const Home: React.FC = () => {
               </ArrowContainer>
             )}
 
-            {magazineJSON.map(magazine => {
-              if (magazine.pageNumber === page.page) {
-                return (
-                  <ImageContainer
-                    key={magazine.pageNumber}
-                    imageHeight={responsiveMagazine.height}
-                  >
-                    <div>
-                      {magazine.buttons.map(button => (
-                        <button
-                          key={button.name}
-                          type="button"
-                          style={{
-                            bottom: button.bottom,
-                            right: button.right,
-                            left: button.left,
-                            top: button.top,
-                          }}
-                          onClick={() => handleAddToCart(button.item)}
-                        >
-                          {button.name}
-                        </button>
-                      ))}
-                    </div>
-                  </ImageContainer>
-                );
-              }
-            })}
+            {window.innerWidth <= 960 ? (
+              <>
+                {magazineJSON.map(magazine => {
+                  if (magazine.onePageNumber === page.page) {
+                    return (
+                      <ImageContainer
+                        key={magazine.id}
+                        imageHeight={responsiveMagazine.height}
+                      >
+                        <div>
+                          {magazine.buttons.map(button => (
+                            <button
+                              key={button.name}
+                              type="button"
+                              style={{
+                                bottom: button.onePagePositions.bottom,
+                                right: button.onePagePositions.right,
+                                left: button.onePagePositions.left,
+                                top: button.onePagePositions.top,
+                              }}
+                              onClick={() => handleAddToCart(button.item)}
+                            >
+                              {button.name}
+                            </button>
+                          ))}
+                        </div>
+                      </ImageContainer>
+                    );
+                  }
+                })}
+              </>
+            ) : (
+              <>
+                {magazineJSON.map(magazine => {
+                  if (magazine.twoPagesNumber.includes(page.page)) {
+                    return (
+                      <ImageContainer
+                        key={magazine.id}
+                        imageHeight={responsiveMagazine.height}
+                      >
+                        <div>
+                          {magazine.buttons.map(button => (
+                            <button
+                              key={button.name}
+                              type="button"
+                              style={{
+                                bottom: button.twoPagesPositions.bottom,
+                                right: button.twoPagesPositions.right,
+                                left: button.twoPagesPositions.left,
+                                top: button.twoPagesPositions.top,
+                              }}
+                              onClick={() => handleAddToCart(button.item)}
+                            >
+                              {button.name}
+                            </button>
+                          ))}
+                        </div>
+                      </ImageContainer>
+                    );
+                  }
+                })}
+              </>
+            )}
 
             <MagazineContainer
               onFlip={e => handlePageFlipped(e.data)}
@@ -213,13 +251,10 @@ const Home: React.FC = () => {
 
               {magazineJSON.map(magazine => (
                 <ImageContainer
-                  key={magazine.pageNumber}
+                  key={magazine.id}
                   imageHeight={responsiveMagazine.height}
                 >
-                  <img
-                    src={magazine.image}
-                    alt={`Revista - Pagina ${magazine.pageNumber}`}
-                  />
+                  <img src={magazine.image} alt="Revista - Imagem" />
                 </ImageContainer>
               ))}
             </MagazineContainer>
