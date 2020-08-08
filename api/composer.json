@@ -1,0 +1,14 @@
+{
+    "name": "jpsoarxs/magazine-api",
+    "description": "Api from magazine Style Brand",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "João Pedro",
+            "email": "49282011+jpsoarxs@users.noreply.github.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
