@@ -132,3 +132,22 @@ export const ItemGroup = styled.div`
   margin-left: 15px;
   text-align: center;
 `;
+
+export const ItemRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  align-items: center;
+
+  div {
+    margin-left: 10px;
+  }
+
+  button {
+    font-size: 20px
+  }
+
+  button + div + button {
+    margin-left: 10px;
+  }
+`;

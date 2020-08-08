@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MdClose } from 'react-icons/md';
+import { FaPlus, FaMinus } from 'react-icons/fa';
 import {
   Container,
   MainContainer,
@@ -9,6 +10,7 @@ import {
   ItemTitle,
   ItemPrice,
   ItemGroup,
+  ItemRow
 } from './styles';
 
 import { formatValue } from '../../helpers';
@@ -21,7 +23,7 @@ interface CartProps {
 }
 
 const Cart: React.FC<CartProps> = ({ handleRemoveCart, isCartActive }) => {
-  const { cartList, decrementFromCart, totalCartValue } = useCart();
+  const { cartList, decrementFromCart, incrementFromCart, totalCartValue } = useCart();
 
   const sendCart = () => {
     var message = "Olá! *Aqui está a lista de produtos Style Brand que desejo comprar:*%0D%0A%0D%0A"
@@ -55,7 +57,13 @@ const Cart: React.FC<CartProps> = ({ handleRemoveCart, isCartActive }) => {
             <ItemTitle>{item.name}</ItemTitle>
             <ItemGroup>
               <ItemPrice>{formatValue(item.price)}</ItemPrice>
-              {item.qtd}
+              <ItemRow>
+                <button onClick={() => decrementFromCart(item.id)}><FaMinus size={15} /></button>
+                <div>
+                {item.qtd}
+                </div>
+                <button onClick={() => incrementFromCart(item.id)}><FaPlus size={15} /></button>
+              </ItemRow>
             </ItemGroup>
           </CartItem>
         ))}

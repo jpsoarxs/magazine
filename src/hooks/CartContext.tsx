@@ -19,6 +19,7 @@ interface CartItem {
 interface CartContextData {
   addToCart(item: Omit<CartItem, 'qtd'>): void;
   decrementFromCart(cartItemId: string): void;
+  incrementFromCart(cartItemId: string): void;
   cartList: CartItem[];
   totalCartValue: string;
 }
@@ -89,9 +90,27 @@ const CartProvider: React.FC = ({ children }) => {
     [cartList],
   );
 
+  const incrementFromCart = useCallback(
+    async cartItemId => {
+      setCartList(
+        cartList.map(cartItem => {
+          if (cartItem.id === cartItemId) {
+            return {
+              ...cartItem,
+              qtd: cartItem.qtd + 1,
+            };
+          }
+
+          return cartItem;
+        }),
+      );
+    },
+    [cartList],
+  );
+
   const value = useMemo(
-    () => ({ addToCart, cartList, decrementFromCart, totalCartValue }),
-    [addToCart, cartList, decrementFromCart, totalCartValue],
+    () => ({ addToCart, cartList, decrementFromCart, incrementFromCart, totalCartValue }),
+    [addToCart, cartList, decrementFromCart, incrementFromCart, totalCartValue],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

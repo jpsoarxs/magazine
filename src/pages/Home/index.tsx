@@ -254,7 +254,7 @@ const Home: React.FC = () => {
                   </ListDescriptionItem>
                   <ListDescriptionItem>
                     Assim que terminar de escolher seus produtos envie a lista
-                    para um(a) Consultor(a) Style Brand e aguarde o retorno para
+                    para nosso whatsapp e aguarde o retorno para
                     combinar direitinho a forma de pagamento e entrega segura.
                   </ListDescriptionItem>
                 </ListDescriptions>
