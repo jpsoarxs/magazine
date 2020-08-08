@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactTooltip from 'react-tooltip';
+import { useCart } from '../../hooks/CartContext';
 import {
   MdFileDownload,
   MdMenu,
@@ -30,13 +31,18 @@ const Header: React.FC<HeaderProps> = ({
   handleToggleCart,
   handleToggleShare,
 }) => {
+
+  const pdf = () => {
+    window.open('../../assets/CATALOGO.pdf')
+  }
+
   return (
     <Container>
       <img src={Logo} alt="Catalogo Digital - Logo" width={90} height={36} />
 
       <CenterHeaderWrapper>
         <div>
-          <IconButton data-tip="Baixar catálogo em PDF" type="button">
+          <IconButton onClick={pdf} data-tip="Baixar catálogo em PDF" type="button">
             <MdFileDownload size={22} />
           </IconButton>
 

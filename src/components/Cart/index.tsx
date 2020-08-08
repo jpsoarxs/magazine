@@ -23,6 +23,17 @@ interface CartProps {
 const Cart: React.FC<CartProps> = ({ handleRemoveCart, isCartActive }) => {
   const { cartList, decrementFromCart, totalCartValue } = useCart();
 
+  const sendCart = () => {
+    var message = "Olá! *Aqui está a lista de produtos Style Brand que desejo comprar:*%0D%0A%0D%0A"
+    var total = 0
+    cartList.map(item => {
+      message += `${item.qtd} unidade(s) ${item.name} - Valor: ${formatValue(item.price)}%0D%0A`
+      total += item.price * item.qtd
+    })
+    message += `%0D%0A%0D%0AO valor total é ${formatValue(total)}`
+    window.open(`https://web.whatsapp.com/send?text=${message}`, '_blank')
+  }
+
   return (
     <Container isCartActive={isCartActive}>
       <header>
@@ -56,8 +67,8 @@ const Cart: React.FC<CartProps> = ({ handleRemoveCart, isCartActive }) => {
           {totalCartValue}
         </p>
 
-        <button type="button">Enviar pedido pelo Whatsapp</button>
-        <button type="button">Pagar com Mercado Pago</button>
+        <button onClick={() => {sendCart()}} type="button">Enviar pedido pelo Whatsapp</button>
+        {/* <button type="button" disabled={true}>Pagar com Mercado Pago</button> */}
       </FooterContainer>
     </Container>
   );

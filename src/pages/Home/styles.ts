@@ -15,16 +15,14 @@ interface ArrowProps {
 
 interface MainContainerProps {
   mainWidth: number;
+  mainHeight: number;
 }
 
 export const Container = styled.div<ContainerProps>`
   width: ${props => (props.isCartActive ? 'calc(100% - 360px)' : '100%')};
-
   height: 100vh;
-
   transition: width 0.2s ease-in-out;
   overflow: hidden;
-
   img {
     width: 100px;
   }
@@ -32,20 +30,16 @@ export const Container = styled.div<ContainerProps>`
 
 export const MainContainer = styled.div<MainContainerProps>`
   width: 100%;
-  margin: 0 auto;
-
+  margin: 50px auto 0 auto;
   @media screen and (min-width: 1000px) {
     max-width: 940px;
   }
-
   @media screen and (max-width: 960px) {
     max-width: ${props => `${props.mainWidth}px`};
   }
-  height: calc(100% - 50px);
+  height: ${props => `${props.mainHeight}px`};
   display: flex;
   justify-content: center;
-  padding: 22px 0;
-
   position: relative;
 `;
 
@@ -97,7 +91,6 @@ export const BottomText = styled.p`
 
 export const ActionText = styled.p`
   margin: 12px 0;
-
   button {
     color: #16a085;
     border: 0;
@@ -123,14 +116,11 @@ export const ArrowRight = styled.div<ArrowProps>`
   display: flex;
   align-items: center;
   cursor: pointer;
-
   &:hover {
     opacity: 0.8;
   }
-
   height: 100%;
   max-height: ${props => `${props.arrowHeight}px`};
-
   z-index: 999;
 `;
 
@@ -144,14 +134,11 @@ export const ArrowLeft = styled.div<ArrowProps>`
   display: flex;
   align-items: center;
   cursor: pointer;
-
   &:hover {
     opacity: 0.8;
   }
-
   height: 100%;
   max-height: ${props => `${props.arrowHeight}px`};
-
   z-index: 999;
 `;
 
@@ -163,7 +150,6 @@ export const ImageContainer = styled.div<ImageContainerProps>`
     position: relative;
     z-index: 999999;
   }
-
   button {
     width: 60px;
     height: 60px;
@@ -171,6 +157,6 @@ export const ImageContainer = styled.div<ImageContainerProps>`
     z-index: 999999;
     background: transparent;
     color: transparent;
-    border: 0;
+    /* border: 0; */
   }
 `;

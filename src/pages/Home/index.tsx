@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { FaArrowRight, FaArrowLeft } from 'react-icons/fa';
+import ReactTool from 'react-tooltip';
 import Header from '../../components/Header';
 import Cart from '../../components/Cart';
 import Share from '../../components/Share';
 
 import { useCart } from '../../hooks/CartContext';
 
-import { magazineJSON } from '../../helpers';
+import { magazineJSON, formatValue } from '../../helpers';
 
 import {
   Container,
@@ -32,54 +33,63 @@ interface ResponsiveProps {
 const Home: React.FC = () => {
   const [isCartActive, setIsCartActive] = useState(false);
   const [isShareActive, setIsShareActive] = useState(false);
+  const [page, setPage] = useState({ page: 1, totalPages: 3 });
   const { addToCart } = useCart();
+  const magazineRef = useRef<any>(null);
   const [responsiveMagazine, setResponsiveMagazine] = useState<ResponsiveProps>(
     {
       width: null,
       height: null,
     },
   );
-  const magazineRef = useRef(null);
 
-  const [page, setPage] = useState({ page: 1, totalPages: 3 });
+  const handleGoToNextPage = useCallback(() => {
+    const magazineRefPageFlip = magazineRef?.current?.getPageFlip();
+    const currentPage = magazineRefPageFlip.getCurrentPageIndex();
+    const totalPages = magazineRefPageFlip.getPageCount() - 1;
+    const windowWidth = window.innerWidth;
+    const onePerPage = windowWidth <= 960;
+    const toPage = onePerPage ? currentPage + 1 : currentPage + 3;
 
-  const nextPage = page => {
-    if (page.current.getPageFlip().getCurrentPageIndex() / 2 == 0) {
-      page.current.getPageFlip().turnToNextPage();
+    magazineRefPageFlip.turnToPage(toPage);
+
+    if (currentPage < totalPages) {
       setPage({
-        page: page.current.getPageFlip().getCurrentPageIndex() + 1,
-        totalPages: page.current.getPageFlip().getPageCount() - 1,
-      });
-    } else {
-      page.current.getPageFlip().turnToNextPage();
-      setPage({
-        page: page.current.getPageFlip().getCurrentPageIndex() + 1,
-        totalPages: page.current.getPageFlip().getPageCount() - 1,
+        page: toPage,
+        totalPages,
       });
     }
-  };
 
-  const backPage = page => {
-    page.current.getPageFlip().turnToPrevPage();
-    setPage({
-      page: page.current.getPageFlip().getCurrentPageIndex() + 1,
-      totalPages: page.current.getPageFlip().getPageCount() - 1,
-    });
-  };
-
-  const pageClick = data => {
-    if (page.totalPages / 2 == 0) {
-      if (data >= page.page) {
-        setPage({ page: page.page + 1, totalPages: page.totalPages });
-      } else {
-        setPage({ page: page.page - 1, totalPages: page.totalPages });
-      }
-    } else if (data >= page.page) {
-      setPage({ page: page.page + 2, totalPages: page.totalPages });
-    } else {
-      setPage({ page: page.page - 2, totalPages: page.totalPages });
+    if (isCartActive) {
+      setIsCartActive(false);
     }
-  };
+  }, [isCartActive]);
+
+  const handleGoToPreviousPage = useCallback(() => {
+    const magazineRefPageFlip = magazineRef?.current?.getPageFlip();
+    const currentPage = magazineRefPageFlip.getCurrentPageIndex() + 1;
+    const totalPages = magazineRefPageFlip.getPageCount() - 1;
+
+    if (currentPage > 0) {
+      setPage({
+        page: currentPage === 1 ? currentPage : currentPage - 1,
+        totalPages,
+      });
+
+      magazineRefPageFlip.turnToPrevPage();
+    }
+
+    if (isCartActive) {
+      setIsCartActive(false);
+    }
+  }, [isCartActive]);
+
+  const handlePageFlipped = useCallback(pageNumber => {
+    setPage(({ page: actualPage, totalPages }) => ({
+      page: pageNumber > totalPages ? actualPage : pageNumber,
+      totalPages,
+    }));
+  }, []);
 
   useEffect(() => {
     const windowWidth = window.innerWidth;
@@ -116,7 +126,7 @@ const Home: React.FC = () => {
 
   const handleAddToCart = useCallback(
     item => {
-      addToCart({ ...item });
+      addToCart(item);
 
       if (!isCartActive) {
         setIsCartActive(true);
@@ -139,48 +149,91 @@ const Home: React.FC = () => {
         />
 
         {responsiveMagazine.width && responsiveMagazine.height ? (
-          <MainContainer mainWidth={responsiveMagazine.width}>
+          <MainContainer
+            mainWidth={responsiveMagazine.width}
+            mainHeight={responsiveMagazine.height}
+          >
             {page.page > 1 && (
               <ArrowContainer>
                 <ArrowLeft
                   arrowHeight={responsiveMagazine.height}
-                  onClick={() => backPage(magazineRef)}
+                  onClick={handleGoToPreviousPage}
                 >
                   <FaArrowLeft size="15" />
                 </ArrowLeft>
               </ArrowContainer>
             )}
 
-            {magazineJSON.map(magazine => {
-              if (magazine.pageNumber === page.page) {
-                return (
-                  <ImageContainer
-                    key={magazine.pageNumber}
-                    imageHeight={responsiveMagazine.height}
-                  >
-                    <div>
-                      {magazine.buttons.map(button => (
-                        <button
-                          key={button.name}
-                          type="button"
-                          style={{
-                            bottom: button.bottom,
-                            right: button.right,
-                            top: button.top,
-                          }}
-                          onClick={() => handleAddToCart(button.item)}
-                        >
-                          {button.name}
-                        </button>
-                      ))}
-                    </div>
-                  </ImageContainer>
-                );
-              }
-            })}
+            {window.innerWidth <= 960 ? (
+              <>
+                {magazineJSON.map(magazine => {
+                  if (magazine.onePageNumber === page.page) {
+                    return (
+                      <ImageContainer
+                        key={magazine.id}
+                        imageHeight={responsiveMagazine.height}
+                      >
+                        <div>
+                          {magazine.buttons.map(button => (
+                            <button
+                              key={button.name}
+                              type="button"
+                              style={{
+                                bottom: button.onePagePositions.bottom,
+                                right: button.onePagePositions.right,
+                                left: button.onePagePositions.left,
+                                top: button.onePagePositions.top,
+                                border: 0
+                              }}
+                              onClick={() => handleAddToCart(button.item)}
+                            >
+                              {button.name}
+                            </button>
+                          ))}
+                        </div>
+                      </ImageContainer>
+                    );
+                  }
+                })}
+              </>
+            ) : (
+              <>
+                {magazineJSON.map(magazine => {
+                  if (magazine.twoPagesNumber.includes(page.page)) {
+                    return (
+                      <ImageContainer
+                        key={magazine.id}
+                        imageHeight={responsiveMagazine.height}
+                      >
+                        <div>
+                          {magazine.buttons.map(button => (
+                            <button
+                              key={button.name}
+                              type="button"
+                              style={{
+                                bottom: button.twoPagesPositions.bottom,
+                                right: button.twoPagesPositions.right,
+                                left: button.twoPagesPositions.left,
+                                top: button.twoPagesPositions.top,
+                                border: 0
+                              }}
+                              data-tip={`${button.item.name} | ${formatValue(button.item.price)}`}
+                              onClick={() => handleAddToCart(button.item)}
+                            >
+                              {button.name}
+                            </button>
+                          ))}
+                        </div>
+                        <ReactTool place="bottom" />
+                      </ImageContainer>
+                    );
+                  }
+                })}
+              </>
+            )}
 
             <MagazineContainer
-              onFlip={e => pageClick(e.data)}
+              onFlip={e => handlePageFlipped(e.data)}
               ref={magazineRef}
               width={responsiveMagazine.width}
               height={responsiveMagazine.height}
@@ -212,13 +265,10 @@ const Home: React.FC = () => {
 
               {magazineJSON.map(magazine => (
                 <ImageContainer
-                  key={magazine.pageNumber}
+                  key={magazine.id}
                   imageHeight={responsiveMagazine.height}
                 >
-                  <img
-                    src={magazine.image}
-                    alt={`Revista - Pagina ${magazine.pageNumber}`}
-                  />
+                  <img src={magazine.image} alt="Revista - Imagem" />
                 </ImageContainer>
               ))}
             </MagazineContainer>
@@ -227,7 +277,7 @@ const Home: React.FC = () => {
               <ArrowContainer>
                 <ArrowRight
                   arrowHeight={responsiveMagazine.height}
-                  onClick={() => nextPage(magazineRef)}
+                  onClick={handleGoToNextPage}
                 >
                   <FaArrowRight size="15" />
                 </ArrowRight>

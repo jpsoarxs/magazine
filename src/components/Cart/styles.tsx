@@ -6,7 +6,7 @@ interface ContainerProps {
 
 export const Container = styled.div<ContainerProps>`
   position: absolute;
-  z-index: 9999;
+  z-index: 9999999;
   top: 0;
   display: ${props => (props.isCartActive ? 'block' : 'none')};
   right: ${props => (props.isCartActive ? '0px' : '-360px')};
@@ -47,7 +47,7 @@ export const MainContainer = styled.ul`
   display: flex;
   flex-direction: column;
   height: 100%;
-  height: calc(100vh - 260px);
+  height: calc(100vh - 160px);
   padding: 6px;
   overflow: auto;
   cursor: context-menu;

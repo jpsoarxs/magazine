@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaFacebook, FaWhatsapp, FaWindowClose } from 'react-icons/fa';
 import { Modal, ModalBody, Close, ButtonFace, ButtonWhat } from './styles';
+import { isMobile } from "react-device-detect";
 
 interface ModalProps {
   handleRemoveModal(): void;
@@ -25,7 +26,21 @@ const Share: React.FC<ModalProps> = ({ handleRemoveModal, isModalActive }) => {
         >
           <FaFacebook size={80} />
         </ButtonFace>
-        <ButtonWhat>
+        <ButtonWhat onClick={() => {
+          if (!isMobile) {
+            window.open(
+              'https://web.whatsapp.com/send?text=https://stylebrandoficial.com.br&v=1605174138',
+              'newwindow',
+              'width=500, height=400',
+            );
+          } else {
+            window.open(
+              'whatsapp://send?text=https://stylebrandoficial.com.br',
+              'newwindow',
+              'width=500, height=400',
+            );
+          }
+        }}>
           <FaWhatsapp size={80} />
         </ButtonWhat>
       </ModalBody>
