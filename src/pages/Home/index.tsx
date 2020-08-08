@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { FaArrowRight, FaArrowLeft } from 'react-icons/fa';
+import ReactTooltip from 'react-tooltip';
 import Header from '../../components/Header';
 import Cart from '../../components/Cart';
 import Share from '../../components/Share';
 import { useCart } from '../../hooks/CartContext';
 
-import { magazineJSON } from '../../helpers';
+import { magazineJSON, formatValue } from '../../helpers';
 
 import {
   Container,
@@ -181,6 +182,7 @@ const Home: React.FC = () => {
                                 right: button.onePagePositions.right,
                                 left: button.onePagePositions.left,
                                 top: button.onePagePositions.top,
+                                border: 0
                               }}
                               onClick={() => handleAddToCart(button.item)}
                             >
@@ -212,13 +214,16 @@ const Home: React.FC = () => {
                                 right: button.twoPagesPositions.right,
                                 left: button.twoPagesPositions.left,
                                 top: button.twoPagesPositions.top,
+                                border: 0
                               }}
+                              data-tip={`${button.item.name} | ${formatValue(button.item.price)}`}
                               onClick={() => handleAddToCart(button.item)}
                             >
                               {button.name}
                             </button>
                           ))}
                         </div>
+                        <ReactTooltip place="bottom" />
                       </ImageContainer>
                     );
                   }
